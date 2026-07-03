@@ -7,7 +7,12 @@
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": ["upe", "node", "express", "javascript"],
+  "keywords": [
+    "upe",
+    "node",
+    "express",
+    "javascript"
+  ],
   "author": "Filière Génie Logiciel UPE",
   "license": "ISC",
   "dependencies": {
