@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <!-- Vos balises d'en-tête viendront ici -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPE-Tasker</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <!-- Votre contenu viendra ici -->
-     <header>
+    <header>
         <h1>UPE-Tasker</h1>
         <p>Gestionnaire de tâches universitaire</p>
-        </header>
-        <main>
-            <main class="app-container">
-        <h1>UPE-Tasker : Suivi Universitaire</h1>
+    </header>
+
+    <main class="app-container">
+        <h1>Suivi Universitaire</h1>
+
         <form id="task-form">
             <input type="text" id="task-input" placeholder="Saisir l'intitulé d'un nouveau projet..." required />
             <button type="submit" id="btn-submit">Ajouter la tâche</button>
         </form>
+
         <section class="list-section">
             <h2>Mes Tâches En Cours</h2>
             <ul id="task-list">
-                <!-- Emplacement réservé pour l'injection algorithmique -->
+                <!-- Injection dynamique -->
             </ul>
         </section>
     </main>
+
     <footer>
         <p>&copy; 2026 - Université Privée de l'Estuaire.</p>
     </footer>
+
+    <!-- IMPORTANT : on charge le script FRONTEND, pas index.js -->
+    <script src="script.js"></script>
 </body>
 </html>

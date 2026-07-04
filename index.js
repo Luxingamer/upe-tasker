@@ -1,40 +1,57 @@
-// INCLUSION DES MODULES VIA COMMONJS
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
 
-
-// INITIALISATION DE L'APPLICATION ET CONFIGURATION DES PARAMÈTRES
 const app = express();
-const PORT_RESEAU = 3000;
+const PORT = 3000;
 
-
-// MISE EN PLACE DES MIDDLEWARES : Configuration de la distribution statique
+// Middleware
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
+// MongoDB
+mongoose.connect('mongodb://localhost:27017/upe-tasker')
+    .then(() => console.log("MongoDB connecté"))
+    .catch(err => console.error("Erreur MongoDB :", err));
 
-// EXTENSION : DÉCLARATION D'UNE ROUTE API TECHNIQUE DE CONTRÔLE DE SANTÉ
-app.get('/api/status', (requestClient, responseServeur) => {
-    responseServeur.json({
-        status: "operational",
-        serverTime: new Date().toISOString(),
-        author: "Département Génie Logiciel - UPE",
-        academicContext: {
-            chapter: 2,
-            topic: "Dynamisation Client et Logique Serveur Express"
-        }
-    });
+// Schéma
+const SchemaTache = new mongoose.Schema({
+    label: { type: String, required: true }
 });
 
+const Tache = mongoose.model('Tache', SchemaTache);
 
-// INITIATION ACTIVE DU PROCESSUS D'ÉCOUTE RESEAU
-app.listen(PORT_RESEAU, () => {
+// Routes API
+app.get('/api/tasks', async (req, res) => {
+    const taches = await Tache.find();
+    res.json(taches);
+});
 
-console.log("====================================================================");
-    console.log(" UNIVERSITÉ PRIVÉE DE L'ESTUAIRE - INFRASTRUCTURE APPLICATIVE ALERTE");
+app.post('/api/tasks', async (req, res) => {
+    const label = req.body.label?.trim();
+    if (!label) return res.status(400).json({ error: "Label vide" });
 
-console.log("====================================================================");
-    console.log(` -> Serveur HTTP démarré avec succès sur l'environnement local.`);
-    console.log(` -> URL d'accès direct de l'application : http://localhost:${PORT_RESEAU}`);
-    console.log(" -> Surveillance de code active via Nodemon : Rechargement opérationnel.");
-    console.log(" -> Pour interrompre le processus serveur, faites l'action : CTRL + C");
-console.log("====================================================================");});
+    const tache = new Tache({ label });
+    await tache.save();
+    res.status(201).json(tache);
+});
+
+app.put('/api/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    const label = req.body.label?.trim();
+
+    if (!label) return res.status(400).json({ error: "Label vide" });
+
+    const tache = await Tache.findByIdAndUpdate(id, { label }, { new: true });
+    res.json(tache);
+});
+
+app.delete('/api/tasks/:id', async (req, res) => {
+    await Tache.findByIdAndDelete(req.params.id);
+    res.json({ message: "Supprimé" });
+});
+
+// Serveur
+app.listen(PORT, () => {
+    console.log(`Serveur lancé : http://localhost:${PORT}`);
+});

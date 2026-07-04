@@ -16,7 +16,8 @@
   "author": "Filière Génie Logiciel UPE",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mongoose": "^9.7.3"
   },
   "devDependencies": {
     "express": "^5.2.1",
